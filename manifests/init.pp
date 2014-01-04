@@ -208,4 +208,13 @@ class supervisor(
     hasrestart => true,
     require    => File[$supervisor::params::conf_file],
   }
+
+  # Patch Debian package
+  if $::osfamily == 'debian' {
+    file { '/etc/init.d/supervisor':
+      source  => 'puppet:///modules/supervisor/supervisor',
+      require => Package[$supervisor::params::package],
+      before  => Service[$supervisor::params::system_service]
+    }
+  }
 }
